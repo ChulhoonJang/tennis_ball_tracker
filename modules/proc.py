@@ -27,14 +27,17 @@ class ImgQueue:
 def clustering(img, num_pixels, aspect_ratio):
     nlabels, labels, stats, centroids = cv2.connectedComponentsWithStats(img)
     rects = []
+    cents = []
     if num_pixels != None and aspect_ratio != None:
-        for stat in stats:
+        for stat, cent in zip(stats, centroids):
             ratio = float(stat[2])/stat[3]
             n = stat[4]
 
             if n >= num_pixels[0]  and n <= num_pixels[1] and ratio >= aspect_ratio[0] and ratio <= aspect_ratio[1]:
                 rects.append(stat)
+                cents.append(cent)
     else:
         rects = stats[1:,:]
+        cents = centroids[1:,:]
             
-    return rects
+    return rects, cents
